@@ -1,0 +1,15 @@
+* {
+    font-family: "Century Gothic",sans-serif;
+}
+
+body {
+    background-color: #EFEFEF;;
+}
+
+#content {
+    width: 80%;
+    margin: auto;
+    background-color: white;
+    padding: 15px;
+    overflow: hidden;
+}
