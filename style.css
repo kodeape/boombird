@@ -5,7 +5,7 @@
 }
 
 body {
-    background-color: rgb(60,60,60);
+    background-color: rgb(44,44,44);
     margin: 0; text-align: center;
 }
 
@@ -56,11 +56,13 @@ button {
 
 #menuContainer {
     background-color: rgb(44,44,44);
-    padding: 5px;
-    height: 80px;
     width: 100%;
     margin: 0;
+    position: absolute;
+    top: 0;
 }
+
+
 
 #menu li {
     list-style-type: none;
@@ -70,20 +72,15 @@ button {
 }
 
 #menu a {
-    height: 80px;
     font-size: 1.5em;
     text-decoration: none;
     padding: 10px;
+    margin: 0;
 }
 
 #menu a:hover {
-    background-color: #EFEFEF;
-    transition-duration: 0.3s;
-}
-
-#menu a:hover li {
-    color: rgb(44,44,44);
-    transition-duration: 0.3s;
+    color: rgb(238,144,28);
+    transition-duration: 0.2s;
 }
 
 #logo {
@@ -91,8 +88,14 @@ button {
 }
 
 #frontpage {
+    position: relative;
     width: 100%;
-    overflow: hidden;
+    height: 100vh;
+    background-image: url(img/frontpage.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    top: 12vh;
 }
 
 #frontPic {

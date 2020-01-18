@@ -1,6 +1,13 @@
 // ---- STYLING ----
+
 $("#frontpage").css({
-    height: $(window).height() - $("#menuContainer").height(),
+    "height": $(window).height() - $("#menuContainer").height(),
+    "overflow": "hidden",
+    "width": "100%",
+    "backgroundImage": "url(img/frontpage)",
+    "backgroundSize": "cover",
+    "backgroundRepeat": "no-repeat",
+    "backgroundPosition": "50% 50%"
 });
 
 
