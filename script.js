@@ -33,7 +33,7 @@ function addPage(linkId, file, backgroundImg, showPage = true) {
 
 addPage("home", "", "frontpage.jpg", false);
 pages[0].loadPage();  // The page that was added first is the default loaded page
-addPage("about", "testabout.html", "frontpage.jpg");
+addPage("about", "about.html", "frontpage.jpg");
 
 $("#menu a").click(function(){
     pages[linkToPageId[this.id]].loadPage();
@@ -44,7 +44,7 @@ $("#menu a").click(function(){
 
 function Observation(date, time, height, more) {  // Klasse for en ny observasjon
     // Definerer observasjonens datamedlemmer/egenskaper:
-    this.index = obsIndex;
+    this.id = obsIndex;
     this.date = date;
     this.time = time;
     this.height = height;
@@ -52,7 +52,7 @@ function Observation(date, time, height, more) {  // Klasse for en ny observasjo
 
     this.addRow = function() {  // Metode som lager en rad i historikk-tabellen tilhørende observasjonen
         var tr = document.createElement('tr');
-        tr.setAttribute('id','row' + this.index);
+        tr.setAttribute('id','row' + this.id);
         var tdDate = document.createElement('td');
         tdDate.innerHTML = this.date.dmy + " / " + this.time.time;
         tr.appendChild(tdDate);
