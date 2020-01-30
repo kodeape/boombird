@@ -1,13 +1,42 @@
-// ---- STYLING ----
+// ---- NAVIGATION ----
 
-$("#frontpage").css({
-    "height": $(window).height() - $("#menuContainer").height(),
-    "overflow": "hidden",
-    "width": "100%",
-    "backgroundImage": "url(img/frontpage)",
-    "backgroundSize": "cover",
-    "backgroundRepeat": "no-repeat",
-    "backgroundPosition": "50% 50%"
+$cont = $("#content");
+$cont.hide();
+
+// JavaScript does have actual classes today, rather than the functions imitating classes that is used in this script
+// I recommend using those instead in your own development
+function Page(pageId, linkId, file, backgroundImg, showPage){
+    this.id = pageId;
+    this.link = linkId;
+    this.content = file;
+    this.img = backgroundImg;
+    this.show = showPage;
+
+    this.loadPage = function() {
+        if (this.show && $cont.is(":hidden")) $cont.show();
+        else if (!this.show && $cont.is(":visible")) $cont.hide();
+        if (this.content != "") $cont.load(this.content);
+        else $cont.html("");
+        $("#frontpage").css("backgroundImage", "url(img/" + this.img + ")");
+    }
+}
+
+var pages = [];
+var linkToPageId = {};
+
+function addPage(linkId, file, backgroundImg, showPage = true) {
+    var pageId = pages.length;
+    var newPage = new Page(pageId, linkId, file, backgroundImg, showPage);
+    pages.push(newPage);
+    linkToPageId[linkId] = pageId;
+}
+
+addPage("home", "", "frontpage.jpg", false);
+pages[0].loadPage();  // The page that was added first is the default loaded page
+addPage("about", "testabout.html", "frontpage.jpg");
+
+$("#menu a").click(function(){
+    pages[linkToPageId[this.id]].loadPage();
 });
 
 
@@ -75,6 +104,8 @@ function handleDate(dateTime) {  // Denne funksjonen tar inn datostrengen og ret
     time = new Time(time[0],time[1],time[2]);  // Oppretter et nytt objekt fra tidsklassen med parametre hours = time[0] = 11, minutes = time[1] = 46 og seconds = time[2] = 22
     return {date: date, time: time};  // Returnerer dato- og tidsobjekt i et array
 }
+
+
 
 // ---- HISTORY ----
 function clearHist(){
@@ -202,7 +233,7 @@ function openFile(file){  // Denne funksjonen åpner ei tekstfil med AJAX, her e
     xmlhttp.onreadystatechange = function(){
       if(xmlhttp.status == 200 && xmlhttp.readyState == 4){  // status 200 = "OK", readyState 4 = "request finished and response is ready"
         txt = xmlhttp.responseText;  // Lagrer rein tekst fra fila i txt-variabelen
-        jsonArr = txt.split("\n");  // jsonArr blir nå et array hvor hver linje i tekstfila blir et eget element (i datalog-fila er hver linje et nytt JSON-objekt)
+        jsonArr = txt.split("\r\n");  // jsonArr blir nå et array hvor hver linje i tekstfila blir et eget element (i datalog-fila er hver linje et nytt JSON-objekt)
         handleJSON(decodeJSON(jsonArr));
       }
     };
@@ -210,4 +241,4 @@ function openFile(file){  // Denne funksjonen åpner ei tekstfil med AJAX, her e
     xmlhttp.send();
 }
 
-openFile("datalog.txt");
+//openFile("datalog.txt");
