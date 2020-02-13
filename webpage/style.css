@@ -1,7 +1,6 @@
 /* TAGS */
 * {
     font-family: "Gayathri", "Century Gothic", sans-serif;
-    color: rgb(239,239,239);
 }
 
 body {
@@ -88,6 +87,15 @@ button {
     background-color: rgb(238,144,28);
     font-weight: bold;
     padding: 8px;
+    cursor: pointer;
+}
+
+#content select {
+    color: rgb(44,44,44);
+}
+
+#content select * {
+    color: rgb(44,44,44);
 }
 
 #menuContainer {
@@ -108,6 +116,7 @@ button {
 }
 
 #menu a {
+    color: rgb(239,239,239);
     font-size: 1.5em;
     text-decoration: none;
     padding: 10px;
@@ -128,7 +137,6 @@ button {
     position: fixed;
     width: 100%;
     height: 100vh;
-    /*background-image: url(img/frontpage.jpg);*/
     background-size: cover;
     background-repeat: no-repeat;
     top: 0;
@@ -154,6 +162,7 @@ button {
 
 #plotDiv {
     margin: auto;
+    width: 70%;
 }
 
 #historyTable {

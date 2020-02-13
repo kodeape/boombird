@@ -6,14 +6,14 @@
     <span><input id="limitHist" type="checkbox" class="dateSel">Begrens historikk til søket</span>
 </div>
 <div id="statsDisp">
-    <p>I denne perioden er det observert fugler i området <span id="amt" class="stat"></span> ganger.</p>
-    <p id="percent" class="hide">Dette er <span id="pcnt" class="stat"></span>% av alle fuglene systemet noen gang har observert.</p>
-    <p>De første fuglene blei observert <span id="firstDate" class="stat"></span> klokka <span id="firstTime" class="stat"></span>, og den siste <span id="lastDate" class="stat"></span> klokka <span id="lastTime" class="stat"></span>.</p>
+    <p>I denne perioden har en fugler kollidert med vindmølla <span id="amt" class="stat"></span> ganger.</p>
+    <p id="percent" class="hide">Dette er <span id="pcnt" class="stat"></span>% av alle kollisjonene systemet noen gang har detektert.</p>
+    <p>Den første kollisjonen blei detektert <span id="firstDate" class="stat"></span> klokka <span id="firstTime" class="stat"></span>, og den siste <span id="lastDate" class="stat"></span> klokka <span id="lastTime" class="stat"></span>.</p>
     <div id="plotDiv"></div>
 </div>
 <p id="feedback" class="hide"></p>
 
-<h2>Data</h2>
+<h2>Historikk</h2>
 <p>Vis <input type="number" id="perPage" value="10" min="1"> observasjoner per side | <button id="showAll">Vis alle</button></p>
 <table id="historyTable">
     <tr id="infoRow">
