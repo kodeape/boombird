@@ -422,7 +422,7 @@ $(".dateSel").change(function(){
 // ---- JSON/FILE HANDLING ----
 
 function handleJSON(jsonObs) {
-    for(var i = jsonObs.length-2; i >= 0; i--){
+    for(var i = jsonObs.length-1; i >= 0; i--){
         obj = jsonObs[i];
         var date = new DateO("","","");
         date.setWithString(obj.date);
@@ -437,7 +437,6 @@ function handleJSON(jsonObs) {
 }
 
 function decodeJSON(jsonArr) {
-    console.log(jsonArr.length);
     jsonObs = [];
     for(var i = 0; i < jsonArr.length-1; i++){
         var obj = JSON.parse(jsonArr[i]);
