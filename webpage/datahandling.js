@@ -6,13 +6,13 @@ function Observation(id, date, time, more) {  // Klasse for en ny observasjon
     this.date = date;
     this.time = time;
     this.more = more;
+}
 
-    this.addRow = function() {  // Metode som lager en rad i historikk-tabellen tilhørende observasjonen
-        $('<tr/>', {'id':'row' + this.id}).appendTo('#historyTable');
-        $('<td/>', {}).html(this.date.dmy).appendTo('#row' + this.id);
-        $('<td/>', {}).html(this.time.timeStr).appendTo('#row' + this.id);
-        $('<td/>', {}).html(this.more).appendTo('#row' + this.id);
-    }
+Observation.prototype.addRow = function() {  // Metode som lager en rad i historikk-tabellen tilhørende observasjonen
+    $('<tr/>', {'id':'row' + this.id}).appendTo('#historyTable');
+    $('<td/>', {}).html(this.date.dmy).appendTo('#row' + this.id);
+    $('<td/>', {}).html(this.time.timeStr).appendTo('#row' + this.id);
+    $('<td/>', {}).html(this.more).appendTo('#row' + this.id);
 }
 
 var allObs = [];
@@ -26,16 +26,24 @@ function DateO(year,month,day) {  // Datoklasse
     this.m = month;
     this.d = day;
     this.dmy = this.d + "." + this.m + "." + this.y;
-    this.setWithString = function(dateStr){
-        this.dmy = dateStr;
-        var dateArr = dateStr.split('.');
-        this.d = dateArr[0];
-        this.m = dateArr[1];
-        this.y = dateArr[2];
-    }
-    this.logDate = function(){
-        console.log("Date: " + this.dmy);
-    }
+}
+
+DateO.prototype.setWithString = function(dateStr){
+    this.dmy = dateStr;
+    var dateArr = dateStr.split('.');
+    this.d = dateArr[0];
+    this.m = dateArr[1];
+    this.y = dateArr[2];
+}
+
+DateO.prototype.correctObjectFormat = function(){
+    if(this.m.length == 1) this.m = "0"+this.m;
+    if(this.d.length == 1) this.d = "0"+this.d;
+    this.dmy = this.d + "." + this.m + "." + this.y;
+}
+
+DateO.prototype.logDate = function(){
+    console.log("Date: " + this.dmy);
 }
 
 function Time(hours,minutes,seconds) {  // Tidsklasse
@@ -43,17 +51,47 @@ function Time(hours,minutes,seconds) {  // Tidsklasse
     this.mins = minutes;
     this.secs = seconds;
     this.timeStr = this.hrs + ":" + this.mins + ":" + this.secs;
-    this.setWithString = function(timeStr){
-        this.timeStr = timeStr;
-        var timeArr = timeStr.split(':');
-        this.hrs = timeArr[0];
-        this.mins = timeArr[1];
-        this.hrs = timeArr[2];
-    }
-    this.logTime = function(){
-        console.log("Time: " + this.timeStr);
-    }
 }
+
+Time.prototype.setWithString = function(timeStr){
+    this.timeStr = timeStr;
+    var timeArr = timeStr.split(':');
+    this.hrs = timeArr[0];
+    this.mins = timeArr[1];
+    this.secs = timeArr[2];
+}
+
+Time.prototype.correctObjectFormat = function(){
+    if(this.hrs.length == 1) this.hrs = "0"+this.hrs;
+    if(this.mins.length == 1) this.mins = "0"+this.mins;
+    if(this.secs.length == 1) this.secs = "0"+this.secs;
+    this.timeStr = this.hrs + ":" + this.mins + ":" + this.secs;
+}
+
+Time.prototype.greaterThan = function(otherTime){
+    if(!(otherTime instanceof Time)) throw new Error("Input type is not Time");
+    if(this.hrs > otherTime.hrs) return true;
+    if(this.hrs != otherTime.hrs) return false;
+    if(this.mins > otherTime.mins) return true;
+    if(this.mins != otherTime.mins) return false;
+    if(this.secs > otherTime.secs) return true;
+    return false;
+}
+
+Time.prototype.equalTo = function(otherTime){
+    if(!(otherTime instanceof Time)) throw new Error("Input type is not Time");
+    if(this.hrs == otherTime.hrs && this.mins == otherTime.mins && this.secs == otherTime.secs) return true;
+    return false;
+}
+
+Time.prototype.geq = function(otherTime){
+    return this.greaterThan(otherTime) || this.equalTo(otherTime);
+}
+
+Time.prototype.logTime = function(){
+    console.log("Time: " + this.timeStr);
+}
+
 
 // ---- HISTORY ----
 function clearHist(){
@@ -72,19 +110,16 @@ var curPages;
 var curDisp;
 
 function histPages(obs,perPage) {
-    modObs = obs.slice();
+    modObs = obs.slice();  // Using the slice function to copy the array (so that modifying modObs does not modify obs)
     var pages = [];
-    var page = 0;
     for(var i = 0; i < obs.length; i+=perPage){
-        pages[page] = modObs.splice(0,perPage);
-        page++;
+        pages.push(modObs.splice(0,perPage));
     }
     return pages;
 }
 
 function printPage(pages,page) {
-    page--;
-    printObs(pages[page]);
+    printObs(pages[--page]);
 }
 
 function pageChange(pages){
@@ -151,7 +186,7 @@ $("#page").change(function(){
 
 
 // ---- STATISTIKK ----
-
+// WARNING: addOpt should be rewritten in jQuery, as with Observation.addRow()
 function addOpt(idSel,idOp,value,text) {  // Funksjon som legger til et alternativ i en dropdown-liste med id = idSel-parameter
     var opt = document.createElement("option");  // Lager det nye elementet
     opt.setAttribute("id",idOp);  // Gir elementet id = idOp (fra parameter)
@@ -190,33 +225,56 @@ function addYearOpts(earliest){  // Denne funksjonen tar inn det første året e
     }
 }
 
-function getTargetObs(obs,d,m,y){  // Denne funksjonen returnerer alle observasjoner som tilfredsstiller datosøket
+function filterTime(obs, fromTime, toTime){
+    var filterObs = [];
+    if(fromTime.geq(toTime)){
+        for(var i = 0; i < obs.length; i++){
+            if(obs[i].time.geq(fromTime) || toTime.geq(obs[i].time)){
+                filterObs.push(obs[i]);
+            }
+        }
+    }
+    else{
+        for(var i = 0; i < obs.length; i++){
+            if(obs[i].time.geq(fromTime) && toTime.geq(obs[i].time)){
+                filterObs.push(obs[i]);
+            }
+        }
+    }
+    return filterObs;
+}
+
+function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjoner som tilfredsstiller datosøket
+    console.log("filterDate:");
+    obs[0].date.logDate();
+    date.logDate();
     var statObs = obs.slice();  // statObs settes lik en kopi av obs (alle observasjoner noensinne) for å ikke endre på selve obs-arrayet når vi endrer på statObs
-    if(y != ""){  // Kodeblokk vil kjøre hvis et år er spesifisert i søket
-        for(var i = 0; i < statObs.length; i++){  // Kjører gjennom alle observasjonene i statObs
-            if(Number(y) != Number(statObs[i].date.y)){  // Kodeblokk kjører hvis året fra søket ikke er lik året til gjeldende observasjon
-                statObs.splice(i,1);  // Observasjonen in question fjernes fra lista
-                i--;  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
+    if(date.y != ""){  // Kodeblokk vil kjøre hvis et år er spesifisert i søket
+        for(var i = 0; i < obs.length; i++){  // Kjører gjennom alle observasjonene i statObs
+            if(date.y != obs[i].date.y){  // Kodeblokk kjører hvis året fra søket ikke er lik året til gjeldende observasjon
+                statObs.splice(i,1);  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
+                i--;
             }
         }
     }
     // De to neste if-blokkene har nøyaktig samme logikk som den over, bare at det her filtreres bort etter søkemåned og søkedag i stedet for søkeår
-    if(m != ""){
-        for(var i = 0; i < statObs.length; i++){
-            if(Number(m) != Number(statObs[i].date.m)){
+    if(date.m != ""){
+        for(var i = 0; i < obs.length; i++){
+            if(date.m != obs[i].date.m){
                 statObs.splice(i,1);
                 i--;
             }
         }
     }
-    if(d != ""){
+    if(date.d != ""){
         for(var i = 0; i < statObs.length; i++){
-            if(Number(d) != Number(statObs[i].date.d)){
+            if(date.d != obs[i].date.d){
                 statObs.splice(i,1);
                 i--;
             }
         }
     }
+
     return statObs;
 }
 
@@ -227,6 +285,8 @@ const firstDateEl = document.getElementById("firstDate");
 const firstTimeEl = document.getElementById("firstTime");
 const lastDateEl = document.getElementById("lastDate");
 const lastTimeEl = document.getElementById("lastTime");
+
+
 
 function updateStats(obs,ofObs,showPcnt){
     $("#statsDisp").removeClass("hide");
@@ -376,34 +436,57 @@ function plot(d,m,y,obs){
     else{
         data = plotYears(obs);
     }
-
     Plotly.newPlot('plotDiv',data[0],data[1]);
 }
+
+var curStatObs;
 
 function searchStats(ofObs){
     var d = document.getElementById("daySel").value;
     var m = document.getElementById("monthSel").value;
     var y = document.getElementById("yearSel").value;
+    var searchDate = new DateO(y,m,d);
+    searchDate.correctObjectFormat();
+    var fromHr = document.getElementById("fromHr").value;
+    var fromMin = document.getElementById("fromMin").value;
+    var fromTime = new Time(fromHr,fromMin, "00");
+    fromTime.correctObjectFormat();
+    fromTime.logTime();
+    var toHr = document.getElementById("toHr").value;
+    var toMin = document.getElementById("toMin").value;
+    var toTime = new Time(toHr,toMin, "00");
+    toTime.correctObjectFormat();
+    toTime.logTime();
     var statObs;
-    var showPcnt;
-    if(d == "" && m == "" && y == ""){
-        statObs = ofObs.slice();
-        showPcnt = false;
+    var showPcnt = true;
+    var noDate = d == "" && m == "" && y == "";
+    var noTime = fromHr == "" || fromMin == "" || toHr == "" || toMin == "";
+    if(noDate){
+        if(noTime){
+            statObs = ofObs.slice();
+            showPcnt = false;
+        }
+        else {
+            statObs = filterTime(ofObs, fromTime, toTime);
+        }
+    }
+    else if(noTime) {
+        statObs = filterDate(ofObs, searchDate);
     }
     else {
-        statObs = getTargetObs(ofObs,d,m,y);
-        showPcnt = true;
+        statObs = filterDate(ofObs, searchDate);
+        statObs = filterTime(statObs, fromTime, toTime);
     }
     if(statObs.length < 1){
         $("#statsDisp").addClass("hide");
-        document.getElementById("feedback").innerHTML = "Det ble ikke observert noen fugler som tilfredsstiller søket ditt.";
+        document.getElementById("feedback").innerHTML = "Det ble ikke detektert noen kollisjoner som tilfredsstiller søket ditt.";
         $("#feedback").removeClass("hide");
     }
     else {
         $("#feedback").addClass("hide");
         var limitHist = document.getElementById("limitHist").checked;
         updateStats(statObs,ofObs,showPcnt);
-        plot(d,m,y,statObs)
+        plot(d,m,y,statObs);
         if(limitHist){
             curObs = statObs;
         }
@@ -412,6 +495,7 @@ function searchStats(ofObs){
         }
         handlePrinting(curObs,curDisp);
     }
+    curStatObs = statObs;
 }
 
 $(".dateSel").change(function(){

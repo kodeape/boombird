@@ -28,7 +28,7 @@ function addAllMemBoxes(mems){
     }
 } 
 
-addMember('img/frog.png', 'Helene Markeng', 'Prosjektleder', 'Hei jeg er en frosk:)');
-addMember('img/frog.png', 'Sara Roberg Ghabeli', 'IT-ansvarlig', 'Hei jeg er også en frosk:)');
-addMember('img/frog.png', 'Steven Francis', 'Leder av dataprosesseringsavdelingen', 'Hei jeg er en rask fouriertransform-frosk:)');
+addMember('img/helene.jpg', 'Helene Markeng', 'Prosjektleder', 'Hei jeg er en frosk:)');
+addMember('img/sara.jpg', 'Sara Roberg Ghabeli', 'IT-ansvarlig', 'Hei jeg er også en frosk:)');
+addMember('img/steven.jpg', 'Steven Francis', 'Leder av dataprosesseringsavdelingen', 'Hei jeg er en rask fouriertransform-frosk:)');
 addAllMemBoxes(members);
