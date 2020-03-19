@@ -1,23 +1,40 @@
 // ---- OBSERVATION HANDLING ----
 
-function Observation(id, date, time, more) {  // Klasse for en ny observasjon
+function Observation(id, data) {  // Klasse for en ny observasjon
     // Definerer observasjonens datamedlemmer/egenskaper:
     this.id = id;
-    this.date = date;
-    this.time = time;
-    this.more = more;
+    this.date = new DateO("","","");
+    this.date.setWithString(data.date);
+    this.time = new Time("","","");
+    this.time.setWithString(data.time);
+    try {
+        this.sunrise = new Time("","","");
+        this.sunrise.setWithString(data.sunrise);
+        this.sunset = new Time("","","");
+        this.sunrise.setWithString(data.sunrise);
+    }
+    catch {
+        this.sunrise = "N/A";
+        this.sunset = "N/A";
+    }
 }
 
 Observation.prototype.addRow = function() {  // Metode som lager en rad i historikk-tabellen tilhørende observasjonen
     $('<tr/>', {'id':'row' + this.id}).appendTo('#historyTable');
     $('<td/>', {}).html(this.date.dmy).appendTo('#row' + this.id);
     $('<td/>', {}).html(this.time.timeStr).appendTo('#row' + this.id);
-    $('<td/>', {}).html(this.more).appendTo('#row' + this.id);
+    if(this.sunrise == "N/A") {
+        $('<td/>', {}).html(this.sunrise).appendTo('#row' + this.id);
+        $('<td/>', {}).html(this.sunset).appendTo('#row' + this.id);
+        return;
+    }
+    $('<td/>', {}).html(this.sunrise.timeStr).appendTo('#row' + this.id);
+    $('<td/>', {}).html(this.sunset.timeStr).appendTo('#row' + this.id);
 }
 
 var allObs = [];
-function addObs(date, time, more) {
-    var newObs = new Observation(allObs.length, date, time, more);
+function addObs(data) {
+    var newObs = new Observation(allObs.length, data);
     allObs.push(newObs);
 }
 
@@ -507,12 +524,7 @@ $(".dateSel").change(function(){
 
 function handleJSON(jsonObs) {
     for(var i = jsonObs.length-1; i >= 0; i--){
-        obj = jsonObs[i];
-        var date = new DateO("","","");
-        date.setWithString(obj.date);
-        var time = new Time("","","");
-        time.setWithString(obj.time);
-        addObs(date,time,"more??");
+        addObs(jsonObs[i]);
     }
     addYearOpts(allObs[allObs.length-1].date.y);
     curObs = allObs;
