@@ -523,13 +523,17 @@ $(".dateSel").change(function(){
 // ---- JSON/FILE HANDLING ----
 
 function handleJSON(jsonObs) {
-    for(var i = jsonObs.length-1; i >= 0; i--){
-        addObs(jsonObs[i]);
+    if(jsonObs.length > 0){
+        for(var i = jsonObs.length-1; i >= 0; i--){
+            addObs(jsonObs[i]);
+        }
+        addYearOpts(allObs[allObs.length-1].date.y);
+        curObs = allObs;
+        perPageChange(curObs);
+        searchStats(allObs);
+        return;
     }
-    addYearOpts(allObs[allObs.length-1].date.y);
-    curObs = allObs;
-    perPageChange(curObs);
-    searchStats(allObs);
+    
 }
 
 function decodeJSON(jsonArr) {
