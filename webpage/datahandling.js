@@ -523,6 +523,7 @@ $(".dateSel").change(function(){
 // ---- JSON/FILE HANDLING ----
 
 function handleJSON(jsonObs) {
+    console.log(jsonObs);
     if(jsonObs.length > 0){
         for(var i = jsonObs.length-1; i >= 0; i--){
             addObs(jsonObs[i]);
