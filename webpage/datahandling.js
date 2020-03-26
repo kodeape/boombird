@@ -11,7 +11,7 @@ function Observation(id, data) {  // Klasse for en ny observasjon
         this.sunrise = new Time("","","");
         this.sunrise.setWithString(data.sunrise);
         this.sunset = new Time("","","");
-        this.sunrise.setWithString(data.sunrise);
+        this.sunset.setWithString(data.sunset);
     }
     catch {
         this.sunrise = "N/A";
@@ -262,13 +262,11 @@ function filterTime(obs, fromTime, toTime){
 }
 
 function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjoner som tilfredsstiller datosøket
-    console.log("filterDate:");
-    obs[0].date.logDate();
-    date.logDate();
     var statObs = obs.slice();  // statObs settes lik en kopi av obs (alle observasjoner noensinne) for å ikke endre på selve obs-arrayet når vi endrer på statObs
     if(date.y != ""){  // Kodeblokk vil kjøre hvis et år er spesifisert i søket
-        for(var i = 0; i < obs.length; i++){  // Kjører gjennom alle observasjonene i statObs
-            if(date.y != obs[i].date.y){  // Kodeblokk kjører hvis året fra søket ikke er lik året til gjeldende observasjon
+	let i = -1;
+        while(++i < statObs.length){  // Kjører gjennom alle observasjonene i statObs
+            if(date.y != statObs[i].date.y){  // Kodeblokk kjører hvis året fra søket ikke er lik året til gjeldende observasjon
                 statObs.splice(i,1);  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
                 i--;
             }
@@ -276,16 +274,19 @@ function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjone
     }
     // De to neste if-blokkene har nøyaktig samme logikk som den over, bare at det her filtreres bort etter søkemåned og søkedag i stedet for søkeår
     if(date.m != ""){
-        for(var i = 0; i < obs.length; i++){
-            if(date.m != obs[i].date.m){
+	let i = -1;
+        while(++i < statObs.length){
+            if(date.m != statObs[i].date.m){
                 statObs.splice(i,1);
                 i--;
             }
         }
+	
     }
     if(date.d != ""){
-        for(var i = 0; i < statObs.length; i++){
-            if(date.d != obs[i].date.d){
+	let i = -1;
+        while(++i < statObs.length){
+            if(date.d != statObs[i].date.d){
                 statObs.splice(i,1);
                 i--;
             }
@@ -468,12 +469,10 @@ function searchStats(ofObs){
     var fromMin = document.getElementById("fromMin").value;
     var fromTime = new Time(fromHr,fromMin, "00");
     fromTime.correctObjectFormat();
-    fromTime.logTime();
     var toHr = document.getElementById("toHr").value;
     var toMin = document.getElementById("toMin").value;
     var toTime = new Time(toHr,toMin, "00");
     toTime.correctObjectFormat();
-    toTime.logTime();
     var statObs;
     var showPcnt = true;
     var noDate = d == "" && m == "" && y == "";
@@ -523,9 +522,9 @@ $(".dateSel").change(function(){
 // ---- JSON/FILE HANDLING ----
 
 function handleJSON(jsonObs) {
-    console.log(jsonObs);
     if(jsonObs.length > 0){
         for(var i = jsonObs.length-1; i >= 0; i--){
+	    if(jsonObs[i] == undefined) {console.log("no. " + i + " undefined"); continue;}
             addObs(jsonObs[i]);
         }
         addYearOpts(allObs[allObs.length-1].date.y);
@@ -540,6 +539,7 @@ function handleJSON(jsonObs) {
 function decodeJSON(jsonArr) {
     jsonObs = [];
     for(var i = 0; i < jsonArr.length-1; i++){
+	if(jsonArr[i]=="") continue;
         var obj = JSON.parse(jsonArr[i]);
         jsonObs.push(obj);
     }
