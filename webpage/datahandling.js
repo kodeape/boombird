@@ -247,14 +247,14 @@ function filterTime(obs, fromTime, toTime){
     let i = -1;
     if(fromTime.geq(toTime)){
         while(++i < statObs.length){
-            if(statObs[i].time.geq(fromTime) || toTime.geq(statObs[i].time)){
+            if(!(statObs[i].time.geq(fromTime) || toTime.geq(statObs[i].time))){
                 statObs.splice(i--,1);
             }
         }
     }
     else{
-        while(++i < obs.length){
-            if(statObs[i].time.geq(fromTime) && toTime.geq(statObs[i].time)){
+        while(++i < statObs.length){
+            if(!(statObs[i].time.geq(fromTime) && toTime.geq(statObs[i].time))){
                 statObs.splice(i--,1);
             }
         }
