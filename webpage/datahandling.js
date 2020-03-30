@@ -243,22 +243,23 @@ function addYearOpts(earliest){  // Denne funksjonen tar inn det første året e
 }
 
 function filterTime(obs, fromTime, toTime){
-    var filterObs = [];
+    var statObs = obs.slice();
+    let i = -1;
     if(fromTime.geq(toTime)){
-        for(var i = 0; i < obs.length; i++){
-            if(obs[i].time.geq(fromTime) || toTime.geq(obs[i].time)){
-                filterObs.push(obs[i]);
+        while(++i < statObs.length){
+            if(statObs[i].time.geq(fromTime) || toTime.geq(statObs[i].time)){
+                statObs.splice(i--,1);
             }
         }
     }
     else{
-        for(var i = 0; i < obs.length; i++){
-            if(obs[i].time.geq(fromTime) && toTime.geq(obs[i].time)){
-                filterObs.push(obs[i]);
+        while(++i < obs.length){
+            if(statObs[i].time.geq(fromTime) && toTime.geq(statObs[i].time)){
+                statObs.splice(i--,1);
             }
         }
     }
-    return filterObs;
+    return statObs;
 }
 
 function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjoner som tilfredsstiller datosøket
@@ -267,8 +268,7 @@ function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjone
 	let i = -1;
         while(++i < statObs.length){  // Kjører gjennom alle observasjonene i statObs
             if(date.y != statObs[i].date.y){  // Kodeblokk kjører hvis året fra søket ikke er lik året til gjeldende observasjon
-                statObs.splice(i,1);  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
-                i--;
+                statObs.splice(i--,1);  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
             }
         }
     }
@@ -277,8 +277,7 @@ function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjone
 	let i = -1;
         while(++i < statObs.length){
             if(date.m != statObs[i].date.m){
-                statObs.splice(i,1);
-                i--;
+                statObs.splice(i--,1);
             }
         }
 	
@@ -287,8 +286,7 @@ function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjone
 	let i = -1;
         while(++i < statObs.length){
             if(date.d != statObs[i].date.d){
-                statObs.splice(i,1);
-                i--;
+                statObs.splice(i--,1);
             }
         }
     }
