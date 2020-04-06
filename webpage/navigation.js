@@ -33,7 +33,7 @@ function addPage(linkId, file, backgroundImg, showPage = true) {
 
 addPage("home", "", "frontpage.jpg", false);
 pages[0].loadPage();  // The page that was added first is the default loaded page
-addPage("about", "about.html", "frontpage.jpg");
+addPage("about", "about.html", "elsys7.JPG");
 addPage("data","data.html","frontpage.jpg");
 
 $("#menu a").click(function(){
