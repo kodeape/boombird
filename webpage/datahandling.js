@@ -12,10 +12,14 @@ function Observation(id, data) {  // Klasse for en ny observasjon
         this.sunrise.setWithString(data.sunrise);
         this.sunset = new Time("","","");
         this.sunset.setWithString(data.sunset);
+        this.sun = (this.time.geq(this.sunrise) && this.sunset.geq(this.time)) ? true : false;
+
     }
     catch {
         this.sunrise = "N/A";
         this.sunset = "N/A";
+	this.sun = "N/A";
+	return;
     }
 }
 
