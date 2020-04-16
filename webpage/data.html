@@ -1,12 +1,18 @@
 <h2>Statistikk</h2>
 <div id="statSearch">
-    <span>Mellom klokka <input id="fromHr" type="number" class="dateSel"> : <input id="fromMin" type="number" class="dateSel"> og <input id="toHr" type="number" class="dateSel"> : <input id="toMin" type="number"class="dateSel"></span>
+    <span>Mellom klokka <input id="fromHr" type="number" class="dateSel"> : <input id="fromMin" type="number" class="dateSel"> og <input id="toHr" type="number" class="dateSel"> : <input id="toMin" type="number"class="dateSel"></span> | 
+    <select id="sunSel" class="dateSel">
+        <option value="all">Alle solposisjoner</option>
+        <option value="down">Når sola er nede</option>
+        <option value="up">Når sola er oppe</option>
+    </select>
     <br><br>
     <span>Dag: <select id="daySel" class="dateSel"></select></span>
     <span>Måned: <select id="monthSel" class="dateSel"></select></span>
     <span>År: <select id="yearSel" class="dateSel"></select></span>
     <span><input id="limitHist" type="checkbox" class="dateSel">Begrens historikk til søket</span>
 </div>
+<br><br>
 <div id="statsDisp">
     <p>I denne perioden har fugler kollidert med vindmølla <span id="amt" class="stat"></span> ganger.</p>
     <p id="percent" class="hide">Dette er <span id="pcnt" class="stat"></span>% av alle kollisjonene systemet noen gang har detektert.</p>

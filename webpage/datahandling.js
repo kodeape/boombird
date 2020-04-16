@@ -18,8 +18,7 @@ function Observation(id, data) {  // Klasse for en ny observasjon
     catch {
         this.sunrise = "N/A";
         this.sunset = "N/A";
-	this.sun = "N/A";
-	return;
+        this.sun = "N/A";
     }
 }
 
@@ -233,7 +232,7 @@ for(var i = 1; i <= monthNames.length; i++){
     addOpt("monthSel","monthOpt" + i, i, monthNames[i-1]);
 }
 
-var years = []
+var years = [];
 addOpt("yearSel","yearId", "", "Alle år");
 function addYearOpts(earliest){  // Denne funksjonen tar inn det første året en fugl ble observert og legger til alle år fra og med det året til og med nåværende år i årvelgeren
     var date = new Date();
@@ -251,16 +250,12 @@ function filterTime(obs, fromTime, toTime){
     let i = -1;
     if(fromTime.geq(toTime)){
         while(++i < statObs.length){
-            if(!(statObs[i].time.geq(fromTime) || toTime.geq(statObs[i].time))){
-                statObs.splice(i--,1);
-            }
+            if(!(statObs[i].time.geq(fromTime) || toTime.geq(statObs[i].time))) statObs.splice(i--,1);
         }
     }
     else{
         while(++i < statObs.length){
-            if(!(statObs[i].time.geq(fromTime) && toTime.geq(statObs[i].time))){
-                statObs.splice(i--,1);
-            }
+            if(!(statObs[i].time.geq(fromTime) && toTime.geq(statObs[i].time))) statObs.splice(i--,1);
         }
     }
     return statObs;
@@ -271,61 +266,34 @@ function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjone
     if(date.y != ""){  // Kodeblokk vil kjøre hvis et år er spesifisert i søket
 	let i = -1;
         while(++i < statObs.length){  // Kjører gjennom alle observasjonene i statObs
-            if(date.y != statObs[i].date.y){  // Kodeblokk kjører hvis året fra søket ikke er lik året til gjeldende observasjon
-                statObs.splice(i--,1);  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
-            }
+            if(date.y != statObs[i].date.y) statObs.splice(i--,1);  // Nå som vi har fjernet observasjonen med indeks i, vi den neste observasjonen i lista være det nye elementet med indeks i. Dette elementet vil bli hoppet over når i økes i neste iterasjon om vi ikke reduserer indeksen med 1 her
         }
     }
     // De to neste if-blokkene har nøyaktig samme logikk som den over, bare at det her filtreres bort etter søkemåned og søkedag i stedet for søkeår
     if(date.m != ""){
 	let i = -1;
         while(++i < statObs.length){
-            if(date.m != statObs[i].date.m){
-                statObs.splice(i--,1);
-            }
+            if(date.m != statObs[i].date.m) statObs.splice(i--,1);
         }
 	
     }
     if(date.d != ""){
 	let i = -1;
         while(++i < statObs.length){
-            if(date.d != statObs[i].date.d){
-                statObs.splice(i--,1);
-            }
+            if(date.d != statObs[i].date.d) statObs.splice(i--,1);
         }
     }
 
     return statObs;
 }
 
-// Definerer forskjellige HTML-elementer som konstanter (fungerer helt likt som variabler, det er bare litt annerledes for datamaskinen)
-const amtEl = document.getElementById("amt");
-const pcntEl = document.getElementById("pcnt");
-const firstDateEl = document.getElementById("firstDate");
-const firstTimeEl = document.getElementById("firstTime");
-const lastDateEl = document.getElementById("lastDate");
-const lastTimeEl = document.getElementById("lastTime");
-
-
-
-function updateStats(obs,ofObs,showPcnt){
-    $("#statsDisp").removeClass("hide");
-    amt = obs.length;
-    first = obs[amt-1];
-    last = obs[0];
-    amtEl.innerHTML = amt;
-    if(showPcnt){
-        pcnt = Math.round(amt/ofObs.length*100);
-        pcntEl.innerHTML = pcnt;
-        $("#percent").removeClass("hide");
+function filterSun(obs, sunUp) {
+    if(typeof(sunUp) != "boolean") return;
+    var statObs = obs.slice();
+    let i = -1;
+    while(++i < statObs.length){
+        if(statObs[i].sun != sunUp) statObs.splice(i--,1);
     }
-    else {
-        $("#percent").addClass("hide");
-    }
-    firstDateEl.innerHTML = first.date.dmy;
-    firstTimeEl.innerHTML = first.time.timeStr;
-    lastDateEl.innerHTML = last.date.dmy;
-    lastTimeEl.innerHTML = last.time.timeStr;
 }
 
 function plotDay(obs){
@@ -411,7 +379,7 @@ function plotYear(obs){
 }
 
 function plotYears(obs){
-    sYears = years.sort();
+    var sYears = years.sort();
     var yearOcc = [];
     var strYears = [];
     for(var i = 0; i < sYears.length; i++){
@@ -459,6 +427,41 @@ function plot(d,m,y,obs){
     Plotly.newPlot('plotDiv',data[0],data[1]);
 }
 
+// Definerer forskjellige HTML-elementer som konstanter (fungerer helt likt som variabler, det er bare litt annerledes for datamaskinen)
+const amtEl = document.getElementById("amt");
+const pcntEl = document.getElementById("pcnt");
+const firstDateEl = document.getElementById("firstDate");
+const firstTimeEl = document.getElementById("firstTime");
+const lastDateEl = document.getElementById("lastDate");
+const lastTimeEl = document.getElementById("lastTime");
+
+function updateStats(d,m,y,obs,ofObs,showPcnt){
+    if(obs.length < 1){
+        $("#statsDisp").addClass("hide");
+        document.getElementById("feedback").innerHTML = "Det ble ikke detektert noen kollisjoner som tilfredsstiller søket ditt.";
+        $("#feedback").removeClass("hide");
+        return;
+    }
+    plot(d,m,y,obs);
+    $("#statsDisp").removeClass("hide");
+    amt = obs.length;
+    first = obs[amt-1];
+    last = obs[0];
+    amtEl.innerHTML = amt;
+    if(showPcnt){
+        pcnt = Math.round(amt/ofObs.length*100);
+        pcntEl.innerHTML = pcnt;
+        $("#percent").removeClass("hide");
+    }
+    else {
+        $("#percent").addClass("hide");
+    }
+    firstDateEl.innerHTML = first.date.dmy;
+    firstTimeEl.innerHTML = first.time.timeStr;
+    lastDateEl.innerHTML = last.date.dmy;
+    lastTimeEl.innerHTML = last.time.timeStr;
+}
+
 var curStatObs;
 
 function searchStats(ofObs){
@@ -475,11 +478,21 @@ function searchStats(ofObs){
     var toMin = document.getElementById("toMin").value;
     var toTime = new Time(toHr,toMin, "00");
     toTime.correctObjectFormat();
-    var statObs;
+    var sun = document.getElementById("sunSel").value;
+    var sunUp;
+    if(sun == "up") sunUp = true;
+    else if(sun == "down") sunUp = false;
+    else sunUp = sun;
+    var statObs = ofObs.slice();
     var showPcnt = true;
     var noDate = d == "" && m == "" && y == "";
     var noTime = fromHr == "" || fromMin == "" || toHr == "" || toMin == "";
-    if(noDate){
+    var allSun = sun == "all";
+    if(!noDate) statObs = filterDate(statObs, searchDate);
+    if(!noTime) statObs = filterTime(statObs, fromTime, toTime);
+    if(!allSun) statObs = filterSun(statObs, sunUp);
+    if(noDate && noTime) showPcnt = false;
+    /*if(noDate){
         if(noTime){
             statObs = ofObs.slice();
             showPcnt = false;
@@ -494,25 +507,17 @@ function searchStats(ofObs){
     else {
         statObs = filterDate(ofObs, searchDate);
         statObs = filterTime(statObs, fromTime, toTime);
-    }
-    if(statObs.length < 1){
-        $("#statsDisp").addClass("hide");
-        document.getElementById("feedback").innerHTML = "Det ble ikke detektert noen kollisjoner som tilfredsstiller søket ditt.";
-        $("#feedback").removeClass("hide");
+    }*/
+    $("#feedback").addClass("hide");
+    var limitHist = document.getElementById("limitHist").checked;
+    updateStats(d,m,y,statObs,ofObs,showPcnt);
+    if(limitHist){
+        curObs = statObs;
     }
     else {
-        $("#feedback").addClass("hide");
-        var limitHist = document.getElementById("limitHist").checked;
-        updateStats(statObs,ofObs,showPcnt);
-        plot(d,m,y,statObs);
-        if(limitHist){
-            curObs = statObs;
-        }
-        else {
-            curObs = allObs;
-        }
-        handlePrinting(curObs,curDisp);
+        curObs = allObs;
     }
+    handlePrinting(curObs,curDisp);
     curStatObs = statObs;
 }
 
