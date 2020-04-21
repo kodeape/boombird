@@ -36,7 +36,7 @@ pages[0].loadPage();  // The page that was added first is the default loaded pag
 addPage("about", "about.html", "elsys7.JPG");
 addPage("concept", "concept.html", "frontpage.jpg");
 addPage("data", "data.html", "frontpage.jpg");
-addPage("store", "store.html", "frontpage.html");
+addPage("store", "store.html", "frontpage.jpg");
 
 $("#menu a").click(function(){
     pages[linkToPageId[this.id]].loadPage();
