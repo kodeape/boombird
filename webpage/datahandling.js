@@ -288,12 +288,13 @@ function filterDate(obs,date){  // Denne funksjonen returnerer alle observasjone
 }
 
 function filterSun(obs, sunUp) {
-    if(typeof(sunUp) != "boolean") return;
+    if(typeof(sunUp) != "boolean") return obs;
     var statObs = obs.slice();
     let i = -1;
     while(++i < statObs.length){
-        if(statObs[i].sun != sunUp) statObs.splice(i--,1);
+        if(statObs[i].sun !== sunUp) statObs.splice(i--,1);
     }
+    return statObs;
 }
 
 function plotDay(obs){
