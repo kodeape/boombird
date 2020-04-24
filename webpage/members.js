@@ -28,7 +28,11 @@ function addAllMemBoxes(mems){
     }
 } 
 
-addMember('img/helene.jpg', 'Helene Markeng', 'Prosjektleder', 'Hei jeg er en frosk:)');
-addMember('img/sara.jpg', 'Sara Roberg Ghabeli', 'IT-ansvarlig', 'Hei jeg er også en frosk:)');
+addMember('img/erlend.jpg', 'Erlend Kristiansen Berg', 'Kommunikasjonsansvarlig', 'For kommunikasjon er ikke bare et fag på Dragvoll.');
+addMember('img/helene.jpg', 'Helene Markeng', 'Prosjektleder', 'Å lede et team som leder seg selv er som risenrynsgrøt på pose, enkelt og tidsparende.');
+addMember('img/jacob.jpg', 'Jacob August Rangnes', '3D-modellerer', 'Fra idé til modell til virkelighet, jeg fikser det.');
+addMember('img/mathias.jpg', 'Mathias Olsen', 'Leder av strømforsyning', 'Et batteri holder deg gående i en måned eller to. Vi holder deg gående for alltid.');
+addMember('img/sara.jpg', 'Sara Roberg Ghabeli', 'IT-ansvarlig', 'En kode er ikke en kode hvis en ikke brukte tre timer på å finne et manglende semikolon.');
+addMember('img/sindre.jpg', 'Sindre Byre', 'Algoritmeutvikler', 'Når man kjenner oppskriften blir løsningen på problemet enkel. Vi lager oppskriften for deg.');
 addMember('img/steven.jpg', 'Steven Francis', 'Leder av dataprosesseringsavdelingen', 'Hei jeg er en rask fouriertransform-frosk:)');
 addAllMemBoxes(members);
