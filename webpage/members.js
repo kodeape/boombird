@@ -34,5 +34,5 @@ addMember('img/jacob.jpg', 'Jacob August Rangnes', '3D-modellerer', 'Fra idé ti
 addMember('img/mathias.jpg', 'Mathias Olsen', 'Leder av strømforsyning', 'Et batteri holder deg gående i en måned eller to. Vi holder deg gående for alltid.');
 addMember('img/sara.jpg', 'Sara Roberg Ghabeli', 'IT-ansvarlig', 'En kode er ikke en kode hvis en ikke brukte tre timer på å finne et manglende semikolon.');
 addMember('img/sindre.jpg', 'Sindre Byre', 'Algoritmeutvikler', 'Når man kjenner oppskriften blir løsningen på problemet enkel. Vi lager oppskriften for deg.');
-addMember('img/steven.jpg', 'Steven Francis', 'Leder av dataprosesseringsavdelingen', 'Hei jeg er en rask fouriertransform-frosk:)');
+addMember('img/steven.jpg', 'Steven Francis', 'Testansvarlig', 'Du har ikke gjennomført en test med mindre du endrer resultatet i din favør.');
 addAllMemBoxes(members);
